@@ -47,7 +47,8 @@ function getCountries(country){
     }).then((response) => response.json())
     .then((data) => {
         renderCountry(data,"neighbour");
-    });
+    })
+    .catch((error) => console.log("Resource not Found",error));
     
 }
 
