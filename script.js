@@ -22,6 +22,7 @@ input.addEventListener('keyup',function(event){
 })
 
 function renderCountry(country, className =''){
+    console.log(country);
     countriescontainer.insertAdjacentHTML('beforeend',`<article class="country ${className}">
     <img class="country__img" src="${country.flags.png}" />
     <div class="country__data">
@@ -35,41 +36,19 @@ function renderCountry(country, className =''){
 }
 
 function getCountries(country){
-    const http = new XMLHttpRequest();
-    http.open('GET',`https://restcountries.com/v2/name/${country}`);
-    http.onloadstart = function(){
-       
-        countriescontainer.classList.add('loading');
-        
-    }
-    http.send();
+    fetch(`https://restcountries.com/v2/name/${country}`)
+    .then((response) => response.json())
+    .then((data) => {
+        renderCountry(data[0]);
+        if(!data[0].borders) return;
+        let [code,...codes] = data[0].borders;
+        return fetch(`https://restcountries.com/v2/alpha/${code}`);
 
-    http.addEventListener('load', function(){
-        countriescontainer.classList.remove('loading');
- 
-        console.log(http.responseText);
-        const [countries] = JSON.parse(http.responseText);
-        renderCountry(countries);
-      function getNeighbours(code){
-        const http2 = new XMLHttpRequest();
-        http2.open('GET',`https://restcountries.com/v2/alpha/${code}`);
-        http2.send();
-
-        http2.addEventListener('load',function(){
-            console.log(http2.responseText);
-            const neighbours = JSON.parse(http2.responseText);
-           renderCountry(neighbours,"neighbour");
-        })
-    }
-
-    
-    const [codes,...code] = countries.borders;
-    if(!codes) return;
-    getNeighbours(codes);
-    code.forEach(code => {
-        getNeighbours(code);
+    }).then((response) => response.json())
+    .then((data) => {
+        renderCountry(data,"neighbour");
     });
-    })
+    
 }
 
 
@@ -79,3 +58,5 @@ function getCountries(country){
 // Language: jabaScript
 // Himanshu Sah
 
+
+//Add class loading
