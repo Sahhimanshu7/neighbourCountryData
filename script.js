@@ -35,6 +35,12 @@ function renderCountry(country, className ='' ){
 </article>`)
 }
 
+function renderError(error){
+    countriescontainer.insertAdjacentHTML('beforeend',`<article class="country">
+    <h1>${error}</h1>`);
+    // countriescontainerstyle.opacity=0;
+}
+
 function getCountries(country){
     fetch(`https://restcountries.com/v2/name/${country}`)
     .then((response) => {
@@ -53,7 +59,8 @@ function getCountries(country){
     .then((data) => {
         renderCountry(data,"neighbour",);
     })
-    .catch((error) => console.log("Resource not Found",error));
+    .catch((error) => renderError(`Something went wrong ${error.message} Try again`))
+    .finally(() => countriescontainer.style.opacity=1);
     
 }
 
@@ -65,4 +72,3 @@ function getCountries(country){
 // Himanshu Sah
 
 
-//Add class loading
