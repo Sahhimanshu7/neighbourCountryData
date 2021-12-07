@@ -21,7 +21,7 @@ input.addEventListener('keyup',function(event){
     }   
 })
 
-function renderCountry(country, className =''){
+function renderCountry(country, className ='' ){
     console.log(country);
     countriescontainer.insertAdjacentHTML('beforeend',`<article class="country ${className}">
     <img class="country__img" src="${country.flags.png}" />
@@ -37,16 +37,21 @@ function renderCountry(country, className =''){
 
 function getCountries(country){
     fetch(`https://restcountries.com/v2/name/${country}`)
-    .then((response) => response.json())
+    .then((response) => {
+        
+        
+        return response.json();
+    })
     .then((data) => {
         renderCountry(data[0]);
+        
         if(!data[0].borders) return;
         let [code,...codes] = data[0].borders;
         return fetch(`https://restcountries.com/v2/alpha/${code}`);
 
     }).then((response) => response.json())
     .then((data) => {
-        renderCountry(data,"neighbour");
+        renderCountry(data,"neighbour",);
     })
     .catch((error) => console.log("Resource not Found",error));
     
